@@ -99,6 +99,10 @@ func login(c *gin.Context) {
 	c.IndentedJSON(http.StatusOK, user)
 }
 
+func getUserAvatar(c *gin.Context) {
+	c.File("./avatar/avatar.jpg")
+}
+
 func main() {
 	mode := goDotEnvVariable("GIN_MODE")
 	port := goDotEnvVariable("PORT")
@@ -109,5 +113,6 @@ func main() {
 	router.GET("/api/habit/current", getCurrentHabits)
 	router.POST("/api/auth/login", login)
 	router.GET("/api/auth", login)
+	router.GET("/api/user/:id/avatar", getUserAvatar)
 	router.Run("localhost:" + port)
 }
