@@ -10,6 +10,9 @@ import (
 	"github.com/joho/godotenv"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
+	"mef.world/backend/controllers"
+	"mef.world/backend/models"
+	"mef.world/backend/routes"
 )
 
 func goDotEnvVariable(key string) string {
@@ -26,6 +29,9 @@ func goDotEnvVariable(key string) string {
 var (
 	DB     *gorm.DB
 	server *gin.Engine
+	// Auth
+	AuthController      controllers.AuthController
+	AuthRouteController routes.AuthRouteController
 )
 
 func init() {
@@ -35,16 +41,19 @@ func init() {
 	port := goDotEnvVariable("DATABASE_HOSTPORT")
 	dbname := goDotEnvVariable("DATABASE_DATANAME")
 
-	dsn := "host=" + host + " user=" + username + " password=" + password + " dbname=" + dbname + " port=" + port + " sslmode=disable"
+	dsn := fmt.Sprintf("host=%v dbname=%v user=%v password=%v port=%v sslmode=disable", host, dbname, username, password, port)
 
 	var err error
 	DB, err = gorm.Open(postgres.Open(dsn), &gorm.Config{})
+	DB.AutoMigrate(&models.User{})
 
 	if err != nil {
 		log.Fatal("Failed to connect to the Database")
 	}
 	fmt.Println("🚀 Connected Successfully to the Database")
 
+	AuthController = controllers.NewAuthController(DB)
+	AuthRouteController = routes.NewAuthRouteController(AuthController)
 	server = gin.Default()
 
 }
@@ -56,8 +65,8 @@ func main() {
 	gin.SetMode(mode)
 
 	router := server.Group("/api")
-	router.GET("/healthchecker", func(ctx *gin.Context) {
-		message := "Welcome to Two-Factor Authentication with Golang"
+	router.GET("/status", func(ctx *gin.Context) {
+		message := "Welcome to mef.world"
 		ctx.JSON(http.StatusOK, gin.H{"status": "success", "message": message})
 	})
 
