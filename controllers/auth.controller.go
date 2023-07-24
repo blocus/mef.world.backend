@@ -8,6 +8,7 @@ import (
 	"github.com/golang-jwt/jwt/v5"
 	"github.com/xlzd/gotp"
 	"gorm.io/gorm"
+	"mef.world/backend/helpers"
 	"mef.world/backend/models"
 )
 
@@ -28,9 +29,10 @@ type LoginResponse struct {
 	User models.UserResponseStructure `json:"user"`
 }
 
-var hmacSampleSecret = []byte{12, 45, 65, 12, 56, 23, 56, 43, 54, 83, 23, 76, 34, 67, 23, 56, 56, 43}
-
 func (ac *AuthController) LoginUser(ctx *gin.Context) {
+	hmacSecret := helpers.GetEnvVariable("JSON_WEB_TOKEN_HMAC_SECRET")
+	var hmacSampleSecret = []byte(hmacSecret)
+
 	var payload *models.OTPInput
 
 	if err := ctx.ShouldBindJSON(&payload); err != nil {
@@ -48,7 +50,6 @@ func (ac *AuthController) LoginUser(ctx *gin.Context) {
 	}
 
 	totp := gotp.NewDefaultTOTP(user.Otp_secret)
-	println(totp.Now())
 
 	now := time.Now() 
 	sec := now.Unix()
@@ -89,10 +90,19 @@ func (ac *AuthController) LoginUser(ctx *gin.Context) {
 
 func (ac *AuthController) GetCurrentUser(ctx *gin.Context) {
 	var user models.User
+	hmacSecret := helpers.GetEnvVariable("JSON_WEB_TOKEN_HMAC_SECRET")
+	hmacSampleSecret := []byte(hmacSecret)
 
-	result := ac.DB.First(&user, "username = ?", "meftah")
+	userId, exist := ctx.Get("user_id")
+
+	if !exist {
+		ctx.AbortWithStatus(http.StatusUnauthorized)
+		return
+	}
+
+	result := ac.DB.First(&user, "id = ?", userId)
 	if result.Error != nil {
-		ctx.JSON(http.StatusBadRequest, gin.H{"status": "fail", "message": "Invalid email or Password", "error": result.Error})
+		ctx.AbortWithStatus(http.StatusUnauthorized)
 		return
 	}
 

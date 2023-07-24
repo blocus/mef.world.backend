@@ -15,6 +15,5 @@ func NewUserRouteController(userController controllers.UserController) UserRoute
 
 func (rc *UserRouteController) UserRoute(rg *gin.RouterGroup) {
 	router := rg.Group("user")
-
 	router.GET("/:id/avatar", rc.userController.GetUserAvatar)
 }
