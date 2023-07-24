@@ -19,12 +19,6 @@ type MyCustomClaims struct {
 
 func VerifyAuth() gin.HandlerFunc {
 	return func(ctx *gin.Context) {
-		url := ctx.Request.URL.String()
-		if url == "/api/auth/login" {
-			ctx.Next()
-			return
-		}
-
 		hmacSecret := helpers.GetEnvVariable("JSON_WEB_TOKEN_HMAC_SECRET")
 		authorisation := strings.Split(ctx.GetHeader("authorisation"), " ")
 

@@ -51,7 +51,7 @@ func (ac *AuthController) LoginUser(ctx *gin.Context) {
 
 	totp := gotp.NewDefaultTOTP(user.Otp_secret)
 
-	now := time.Now() 
+	now := time.Now()
 	sec := now.Unix()
 
 	valid := totp.Verify(payload.Token, sec)
@@ -133,4 +133,3 @@ func (ac *AuthController) GetCurrentUser(ctx *gin.Context) {
 	}
 	ctx.IndentedJSON(http.StatusOK, response)
 }
-
