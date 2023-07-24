@@ -29,9 +29,14 @@ func goDotEnvVariable(key string) string {
 var (
 	DB     *gorm.DB
 	server *gin.Engine
+
 	// Auth
 	AuthController      controllers.AuthController
 	AuthRouteController routes.AuthRouteController
+
+	// User
+	UserController      controllers.UserController
+	UserRouteController routes.UserRouteController
 )
 
 func init() {
@@ -54,6 +59,9 @@ func init() {
 
 	AuthController = controllers.NewAuthController(DB)
 	AuthRouteController = routes.NewAuthRouteController(AuthController)
+
+	UserController = controllers.NewUserController(DB)
+	UserRouteController = routes.NewUserRouteController(UserController)
 	server = gin.Default()
 
 }
@@ -70,5 +78,7 @@ func main() {
 		ctx.JSON(http.StatusOK, gin.H{"status": "success", "message": message})
 	})
 
+	AuthRouteController.AuthRoute(router)
+	UserRouteController.UserRoute(router)
 	log.Fatal(server.Run("localhost:" + port))
 }
