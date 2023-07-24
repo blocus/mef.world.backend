@@ -10,7 +10,6 @@ import (
 	"gorm.io/gorm"
 	"mef.world/backend/controllers"
 	"mef.world/backend/helpers"
-	"mef.world/backend/middleware"
 	"mef.world/backend/models"
 	"mef.world/backend/routes"
 )
@@ -34,6 +33,9 @@ func init() {
 	host := helpers.GetEnvVariable("DATABASE_HOSTNAME")
 	port := helpers.GetEnvVariable("DATABASE_HOSTPORT")
 	dbname := helpers.GetEnvVariable("DATABASE_DATANAME")
+	mode := helpers.GetEnvVariable("GIN_MODE")
+
+	gin.SetMode(mode)
 
 	dsn := fmt.Sprintf("host=%v dbname=%v user=%v password=%v port=%v sslmode=disable", host, dbname, username, password, port)
 
@@ -56,12 +58,7 @@ func init() {
 }
 
 func main() {
-	mode := helpers.GetEnvVariable("GIN_MODE")
 	port := helpers.GetEnvVariable("PORT")
-
-	gin.SetMode(mode)
-
-	server.Use(middleware.VerifyAuth())
 
 	router := server.Group("/api")
 	router.GET("/status", func(ctx *gin.Context) {
