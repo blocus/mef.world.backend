@@ -7,16 +7,16 @@ import (
 
 type User struct {
 	ID        uuid.UUID `gorm:"type:uuid;primary_key;"`
-	FirstName string    `gorm:"type:varchar(255);not null"`
-	LastName  string    `gorm:"type:varchar(255);not null"`
-	Username  string    `gorm:"uniqueIndex;not null"`
-	Password  string    `gorm:"not null"`
+	FirstName string
+	LastName  string
+	Username  string `gorm:"uniqueIndex;not null"`
+	Password  string `json:"-"`
 
-	Otp_enabled  bool `gorm:"default:false;"`
-	Otp_verified bool `gorm:"default:false;"`
+	Otp_enabled  bool `json:"-"`
+	Otp_verified bool `json:"-"`
 
-	Otp_secret   string
-	Otp_auth_url string
+	Otp_secret   string `json:"-"`
+	Otp_auth_url string `json:"-"`
 }
 
 func (user *User) BeforeCreate(*gorm.DB) error {

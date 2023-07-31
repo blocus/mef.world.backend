@@ -20,7 +20,7 @@ type MyCustomClaims struct {
 func VerifyAuth() gin.HandlerFunc {
 	return func(ctx *gin.Context) {
 		hmacSecret := helpers.GetEnvVariable("JSON_WEB_TOKEN_HMAC_SECRET")
-		authorisation := strings.Split(ctx.GetHeader("authorisation"), " ")
+		authorisation := strings.Split(ctx.GetHeader("authorization"), " ")
 
 		if authorisation[0] != "Bearer" || len(authorisation) != 2 {
 			ctx.AbortWithStatus(http.StatusUnauthorized)
@@ -33,6 +33,7 @@ func VerifyAuth() gin.HandlerFunc {
 
 		if claims, ok := res.Claims.(*MyCustomClaims); ok && res.Valid && err == nil {
 			ctx.Set("user_id", claims.Id)
+			println(claims.Id)
 		} else {
 			ctx.AbortWithStatus(http.StatusUnauthorized)
 			return
