@@ -33,7 +33,6 @@ func VerifyAuth() gin.HandlerFunc {
 
 		if claims, ok := res.Claims.(*MyCustomClaims); ok && res.Valid && err == nil {
 			ctx.Set("user_id", claims.Id)
-			println(claims.Id)
 		} else {
 			ctx.AbortWithStatus(http.StatusUnauthorized)
 			return

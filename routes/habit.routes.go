@@ -17,4 +17,5 @@ func NewHabitRouteController(userController controllers.HabitController) HabitRo
 func (rc *HabitRouteController) HabitRoute(rg *gin.RouterGroup) {
 	router := rg.Group("habit")
 	router.GET("/", middleware.VerifyAuth(), rc.userController.GetUserCurrentHabits)
+	router.PATCH("/:habit_id/:activity_id", middleware.VerifyAuth(), rc.userController.UpdateActivityValue)
 }

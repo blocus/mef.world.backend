@@ -1,16 +1,19 @@
 package models
 
 import (
+	"time"
+
 	uuid "github.com/satori/go.uuid"
 	"gorm.io/gorm"
 )
 
 type User struct {
-	ID        uuid.UUID `gorm:"type:uuid;primary_key;"`
-	FirstName string
-	LastName  string
-	Username  string `gorm:"uniqueIndex;not null"`
-	Password  string `json:"-"`
+	ID          uuid.UUID `gorm:"type:uuid;primary_key;"`
+	FirstName   string
+	LastName    string
+	Username    string     `gorm:"uniqueIndex;not null"`
+	Password    string     `json:"-"`
+	RegistredAt *time.Time `json:"registred_at"`
 
 	Otp_enabled  bool `json:"-"`
 	Otp_verified bool `json:"-"`
@@ -26,10 +29,11 @@ func (user *User) BeforeCreate(*gorm.DB) error {
 }
 
 type UserResponseStructure struct {
-	ID        string `json:"id"`
-	FirstName string `json:"firstName"`
-	LastName  string `json:"lastName"`
-	Username  string `json:"username"`
+	ID          string     `json:"id"`
+	FirstName   string     `json:"firstName"`
+	LastName    string     `json:"lastName"`
+	Username    string     `json:"username"`
+	RegistredAt *time.Time `json:"registred_at"`
 }
 
 type OTPInput struct {

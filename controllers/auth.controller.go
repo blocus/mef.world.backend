@@ -61,17 +61,19 @@ func (ac *AuthController) LoginUser(ctx *gin.Context) {
 	}
 
 	userResponse := models.UserResponseStructure{
-		ID:        user.ID.String(),
-		FirstName: user.FirstName,
-		LastName:  user.LastName,
-		Username:  user.Username,
+		ID:          user.ID.String(),
+		FirstName:   user.FirstName,
+		LastName:    user.LastName,
+		Username:    user.Username,
+		RegistredAt: user.RegistredAt,
 	}
 
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, jwt.MapClaims{
-		"id":        user.ID.String(),
-		"firstName": user.FirstName,
-		"lastName":  user.LastName,
-		"username":  user.Username,
+		"id":           user.ID.String(),
+		"firstName":    user.FirstName,
+		"lastName":     user.LastName,
+		"username":     user.Username,
+		"registred_at": user.RegistredAt,
 	})
 	jwToken, err := token.SignedString(hmacSampleSecret)
 	if err != nil {
@@ -107,17 +109,19 @@ func (ac *AuthController) GetCurrentUser(ctx *gin.Context) {
 	}
 
 	userResponse := models.UserResponseStructure{
-		ID:        user.ID.String(),
-		FirstName: user.FirstName,
-		LastName:  user.LastName,
-		Username:  user.Username,
+		ID:          user.ID.String(),
+		FirstName:   user.FirstName,
+		LastName:    user.LastName,
+		Username:    user.Username,
+		RegistredAt: user.RegistredAt,
 	}
 
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, jwt.MapClaims{
-		"id":        user.ID.String(),
-		"firstName": user.FirstName,
-		"lastName":  user.LastName,
-		"username":  user.Username,
+		"id":           user.ID.String(),
+		"firstName":    user.FirstName,
+		"lastName":     user.LastName,
+		"username":     user.Username,
+		"registred_at": user.RegistredAt,
 	})
 	jwToken, err := token.SignedString(hmacSampleSecret)
 	if err != nil {

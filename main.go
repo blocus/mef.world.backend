@@ -13,51 +13,6 @@ import (
 	"mef.world/backend/routes"
 )
 
-// type currentHabitInterface struct {
-// 	ID    string `json:"id"`
-// 	Title string `json:"title"`
-// 	MON   bool
-// 	TUE   bool
-// 	WED   bool
-// 	THU   bool
-// 	FRI   bool
-// 	SAT   bool
-// 	SUN   bool
-// }
-
-// var habits = []currentHabitInterface{
-// 	{ID: "4", Title: "teeth bruch every morning", MON: true, TUE: true, WED: true, THU: true, FRI: true, SAT: true, SUN: true},
-// 	{ID: "1", Title: "Drink water", MON: true, TUE: true, WED: true, THU: true, FRI: true, SAT: true, SUN: true},
-// 	{ID: "2", Title: "Read 10 pages from a book", MON: true, TUE: true, WED: true, THU: true, FRI: true, SAT: true, SUN: true},
-// 	{ID: "3", Title: "workout for 1h", MON: true, TUE: true, WED: true, THU: true, FRI: true, SAT: true, SUN: true},
-// }
-
-// type getCurrentHabitInterface struct {
-// 	Data []currentHabitInterface `json:"data"`
-// 	Week int                     `json:"week"`
-// }
-
-// func getCurrentHabits(c *gin.Context) {
-
-// 	var currentHabits = getCurrentHabitInterface{
-// 		Data: habits,
-// 		Week: 10,
-// 	}
-
-// 	c.IndentedJSON(http.StatusOK, currentHabits)
-// }
-
-// func postAlbums(c *gin.Context) {
-// 	var newHabit currentHabitInterface
-
-// 	if err := c.BindJSON(&newHabit); err != nil {
-// 		return
-// 	}
-
-// 	habits = append(habits, newHabit)
-// 	c.IndentedJSON(http.StatusCreated, newHabit)
-// }
-
 var (
 	DB     *gorm.DB
 	server *gin.Engine
@@ -89,9 +44,6 @@ func init() {
 
 	var err error
 	DB, err = gorm.Open(postgres.Open(dsn), &gorm.Config{})
-	// DB.AutoMigrate(&models.User{})
-	// DB.AutoMigrate(&models.Habit{})
-	// DB.AutoMigrate(&models.HabitActivity{})
 
 	if err != nil {
 		log.Fatal("Failed to connect to the Database")
@@ -112,13 +64,6 @@ func init() {
 
 func main() {
 	port := helpers.GetEnvVariable("PORT")
-
-	// router.GET("/api/habit/current", getCurrentHabits)
-	// router.GET("/api/user/:id/avatar", getUserAvatar)
-
-	// corsConfig := cors.DefaultConfig()
-	// corsConfig.AllowOrigins = []string{"http://localhost:3000"}
-	// corsConfig.AllowCredentials = true
 
 	router := server.Group("/api")
 	router.GET("/status", func(ctx *gin.Context) {
